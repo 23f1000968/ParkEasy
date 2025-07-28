@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Login - Vehicle Parking App{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card">
+            <div class="card-header bg-dark text-white">
+                <h3 class="text-center">👨‍💼 Admin Login</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('admin_login') }}">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Admin Username</label>
+                        <input type="text" class="form-control" id="username" name="username" required 
+                               placeholder="Enter admin username">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Admin Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required 
+                               placeholder="Enter admin password">
+                    </div>
+                    
+                    <div class="alert alert-info" role="alert">
+                        <strong>Default Admin Credentials:</strong><br>
+                        Username: admin<br>
+                        Password: admin123
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-dark">Admin Login</button>
+                    </div>
+                </form>
+                
+                <div class="text-center mt-3">
+                    <p><a href="{{ url_for('user_login') }}">User? Login here</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
