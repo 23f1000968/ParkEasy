@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}{{ lot.prime_location_name }} Details - Vehicle Parking App{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>🅿️ {{ lot.prime_location_name }} - Parking Lot Details</h2>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary btn-sm mb-3">← Back to Dashboard</a>
+    </div>
+</div>
+
+<!-- Lot Information -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h4>Parking Lot Information</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Location:</strong> {{ lot.prime_location_name }}</p>
+                <p><strong>Address:</strong> {{ lot.address }}</p>
+                <p><strong>Pin Code:</strong> {{ lot.pin_code }}</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Price per Hour:</strong> ₹{{ lot.price_per_hour }}</p>
+                <p><strong>Total Spots:</strong> {{ lot.maximum_spots }}</p>
+                <p><strong>Created On:</strong> {{ lot.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Parking Spots Grid -->
+<div class="card">
+    <div class="card-header">
+        <h4>Parking Spots Status</h4>
+        <p class="mb-0">
+            <span class="badge bg-success">Green = Available</span>
+            <span class="badge bg-danger">Red = Occupied</span>
+        </p>
+    </div>
+    <div class="card-body">
+        <div class="parking-spots-grid">
+            {% for detail in spot_details %}
+                <div class="parking-spot {{ 'spot-available' if detail.spot.status == 'A' else 'spot-occupied' }}"
+                     title="Spot #{{ detail.spot.spot_number }}">
+                    {{ detail.spot.spot_number }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Occupied Spots Details -->
+<div class="card mt-4">
+    <div class="card-header">
+        <h4>Currently Occupied Spots</h4>
+    </div>
+    <div class="card-body">
+        {% set occupied_spots = spot_details|selectattr('reservation')|list %}
+        {% if occupied_spots %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Spot #</th>
+                            <th>User</th>
+                            <th>Vehicle Number</th>
+                            <th>Parked Since</th>
+                            <th>Duration</th>
+                            <th>Current Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for detail in occupied_spots %}
+                            {% if detail.reservation %}
+                                {% set duration = (now() - detail.reservation.parking_timestamp).total_seconds() / 3600 %}
+                                {% set current_cost = (duration * lot.price_per_hour)|round(2) %}
+                                <tr>
+                                    <td><strong>{{ detail.spot.spot_number }}</strong></td>
+                                    <td>{{ detail.reservation.user.username }}</td>
+                                    <td>{{ detail.reservation.vehicle_number }}</td>
+                                    <td>{{ detail.reservation.parking_timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                                    <td>{{ '%0.1f'|format(duration) }} hours</td>
+                                    <td>₹{{ current_cost }}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-center">No occupied spots at the moment.</p>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .parking-spots-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+    }
+</style>
+{% endblock %}
