@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Vehicle Parking App{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="text-center py-5">
+            <h1 class="display-4">🚗 ParkEasy</h1>
+            <p class="lead">Smart parking solutions for busy cities</p>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <!-- User Section -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body text-center">
+                <h2 class="card-title">👤 For Users</h2>
+                <p class="card-text">Book parking spots in available lots and manage your parking history</p>
+                <a href="{{ url_for('user_login') }}" class="btn btn-primary m-2">Login</a>
+                <a href="{{ url_for('register') }}" class="btn btn-success m-2">Register</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Admin Section -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body text-center">
+                <h2 class="card-title">👨‍💼 For Administrators</h2>
+                <p class="card-text">Manage parking lots, view occupancy, and monitor all parking activities</p>
+                <a href="{{ url_for('admin_login') }}" class="btn btn-dark m-2">Admin Login</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-12">
+        <h3 class="text-center mb-4">How It Works</h3>
+        <div class="row">
+            <div class="col-md-4 text-center">
+                <div class="p-3">
+                    <h1>📱</h1>
+                    <h5>1. Register/Login</h5>
+                    <p>Create an account or login to access parking services</p>
+                </div>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="p-3">
+                    <h1>🅿️</h1>
+                    <h5>2. Choose Parking Lot</h5>
+                    <p>Select from available parking lots in your area</p>
+                </div>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="p-3">
+                    <h1>✅</h1>
+                    <h5>3. Book & Park</h5>
+                    <p>Book your spot and park your vehicle safely</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
