@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}Search - Admin{% endblock %}
+
+{% block content %}
+<h2>🔍 Search Parking Information</h2>
+
+<div class="card mt-4">
+    <div class="card-body">
+        <form method="POST" action="{{ url_for('admin_search') }}">
+            <div class="row">
+                <div class="col-md-4">
+                    <select class="form-select" name="search_type" required>
+                        <option value="">Select Search Type</option>
+                        <option value="spot_number">By Spot Number</option>
+                        <option value="vehicle">By Vehicle Number</option>
+                        <option value="location">By Location Name</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" class="form-control" name="search_query" 
+                           placeholder="Enter search term..." value="{{ search_query }}" required>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if search_results is not none %}
+    <div class="card mt-4">
+        <div class="card-header">
+            <h4>Search Results for "{{ search_query }}"</h4>
+        </div>
+        <div class="card-body">
+            {% if search_type == 'spot_number' %}
+                {% if search_results %}
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Spot Number</th>
+                                <th>Parking Lot</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for spot, lot in search_results %}
+                                <tr>
+                                    <td>{{ spot.spot_number }}</td>
+                                    <td>{{ lot.prime_location_name }}</td>
+                                    <td>
+                                        <span class="badge bg-{{ 'success' if spot.status == 'A' else 'danger' }}">
+                                            {{ 'Available' if spot.status == 'A' else 'Occupied' }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('view_lot_details', lot_id=lot.id) }}" class="btn btn-sm btn-info">View Lot</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p class="text-center">No spots found with number: {{ search_query }}</p>
+                {% endif %}
+                
+            {% elif search_type == 'vehicle' %}
+                {% if search_results %}
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Vehicle Number</th>
+                                <th>User</th>
+                                <th>Parking Lot</th>
+                                <th>Spot</th>
+                                <th>Parked Since</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for reservation, spot, lot, user in search_results %}
+                                <tr>
+                                    <td>{{ reservation.vehicle_number }}</td>
+                                    <td>{{ user.username }}</td>
+                                    <td>{{ lot.prime_location_name }}</td>
+                                    <td>{{ spot.spot_number }}</td>
+                                    <td>{{ reservation.parking_timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>No active parking found for vehicle: {{ search_query }}</p>
+                {% endif %}
+                
+            {% elif search_type == 'location' %}
+                {% if search_results %}
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Location Name</th>
+                                <th>Address</th>
+                                <th>Total Spots</th>
+                                <th>Available</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for lot in search_results %}
+                                <tr>
+                                    <td>{{ lot.prime_location_name }}</td>
+                                    <td>{{ lot.address }}</td>
+                                    <td>{{ lot.maximum_spots }}</td>
+                                    <td>{{ lot.spots|selectattr('status', 'equalto', 'A')|list|length }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>No parking lots found matching: {{ search_query }}</p>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
