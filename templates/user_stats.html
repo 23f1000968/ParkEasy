@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}My Parking Statistics{% endblock %}
+
+{% block content %}
+<h2>📊 My Parking Statistics</h2>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="dashboard-stat">
+            <h3>{{ stats.total_parkings }}</h3>
+            <p>Total Parkings</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="dashboard-stat">
+            <h3>₹{{ stats.total_cost }}</h3>
+            <p>Total Spent</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="dashboard-stat">
+            <h3>{{ stats.total_hours }} hrs</h3>
+            <p>Total Time Parked</p>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-3">
+    <div class="col-md-4">
+        <div class="dashboard-stat">
+            <h3>₹{{ stats.average_cost }}</h3>
+            <p>Average Cost per Parking</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="dashboard-stat">
+            <h3>{{ stats.average_duration }} hrs</h3>
+            <p>Average Parking Duration</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="dashboard-stat">
+            <h3>{{ stats.favorite_lot if stats.favorite_lot else 'N/A' }}</h3>
+            <p>Most Used Location</p>
+        </div>
+    </div>
+</div>
+
+<div class="text-center mt-4">
+    <a href="{{ url_for('user_dashboard') }}" class="btn btn-primary">Back to Dashboard</a>
+</div>
+{% endblock %}
