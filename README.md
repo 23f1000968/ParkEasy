@@ -39,7 +39,7 @@ A Flask-based web application for managing parking lots and vehicle parking oper
 
 1. Clone the repository
 ```bash
-git clone https://github.com/23f1000968/parking_app.git
+git clone https://github.com/23f1000968/ParkEasy.git
 cd parking_app
 ```
 
