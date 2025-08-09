@@ -321,6 +321,13 @@ def delete_lot(lot_id):
         flash('Cannot delete parking lot with occupied spots!', 'error')
         return redirect(url_for('admin_dashboard'))
     
+    # Get all spot IDs for this lot
+    spot_ids = [spot.id for spot in lot.spots]
+    
+    # Delete all reservations associated with these spots
+    if spot_ids:
+        Reservation.query.filter(Reservation.spot_id.in_(spot_ids)).delete(synchronize_session=False)
+
     db.session.delete(lot)
     db.session.commit()
     
